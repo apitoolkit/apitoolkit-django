@@ -20,7 +20,7 @@ Then add apitoolkit middleware into the settings middleware list:
 
 MIDDLEWARE = [
     ...,
-    'apitoolkit.APIToolkit',
+    'apitoolkit-django.APIToolkit',
     ...,
 ]
 
