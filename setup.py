@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="apitoolkit_django",
-    version="0.1",
+    version="0.1.2",
     packages=find_packages(),
     description='A Django SDK for Apitoolkit integration',
     long_description=long_description,
