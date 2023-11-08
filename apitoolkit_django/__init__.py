@@ -1,3 +1,4 @@
+import uuid
 import requests
 from google.cloud import pubsub_v1
 from google.oauth2 import service_account
@@ -24,6 +25,10 @@ class APIToolkit:
             settings, 'APITOOLKIT_REDACT_RES_BODY', [])
         self.get_response = get_response
 
+        self.service_version = getattr(
+            settings, "APITOOLKIT_SERVICE_VERSION", None)
+        self.tags = getattr(settings, "APITOOLKIT_TAGS", [])
+
         api_key = getattr(settings, 'APITOOLKIT_KEY', '')
         root_url = getattr(settings, 'APITOOLKIT_ROOT_URL',
                            "https://app.apitoolkit.io")
@@ -41,6 +46,9 @@ class APIToolkit:
             topic=data['topic_id'],
         )
         self.meta = data
+
+    def getInfo(self):
+        return {"project_id": self.meta["project_id"], "service_version": self.service_version, "tags": self.tags}
 
     def publish_message(self, payload):
         data = json.dumps(payload).encode('utf-8')
@@ -89,6 +97,9 @@ class APIToolkit:
             request_body = request.body.decode('utf-8')
         if content_type == 'application/x-www-form-urlencoded' or 'multipart/form-data' in content_type:
             request_body = dict(request.POST.copy())
+        request.apitoolkit_message_id = str(uuid.uuid4())
+        request.apitoolkit_errors = []
+        request.apitoolkit_client = self
 
         response = self.get_response(request)
         if self.debug:
@@ -105,6 +116,8 @@ class APIToolkit:
         response_body = self.redact_fields(
             response.content.decode('utf-8'), self.redact_response_body)
         timestamp = datetime.now(pytz.timezone("UTC")).isoformat()
+        message_id = request.apitoolkit_message_id
+        errors = request.apitoolkit_errors or []
         try:
             payload = {
                 "query_params": query_params,
@@ -123,11 +136,15 @@ class APIToolkit:
                 "sdk_type": "PythonDjango",
                 "project_id": self.meta["project_id"],
                 "status_code": status_code,
+                "errors": errors,
+                "msg_id": message_id,
+                "parent_id": None,
                 "duration": duration,
+                "service_version": self.service_version,
+                "tags": self.tags,
                 "timestamp": timestamp
             }
             self.publish_message(payload)
         except Exception as e:
-            print(e)
             return response
         return response
