@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 import pytz
 from django.conf import settings
+from apitoolkit_python import observe_request, report_error
 
 
 class APIToolkit:
@@ -117,7 +118,7 @@ class APIToolkit:
             response.content.decode('utf-8'), self.redact_response_body)
         timestamp = datetime.now(pytz.timezone("UTC")).isoformat()
         message_id = request.apitoolkit_message_id
-        errors = request.apitoolkit_errors or []
+        errors = request.apitoolkit_errors
         try:
             payload = {
                 "query_params": query_params,
