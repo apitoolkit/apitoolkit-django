@@ -20,7 +20,7 @@ Then add apitoolkit middleware into the settings middleware list:
 
 MIDDLEWARE = [
     ...,
-    'apitoolkit-django.APIToolkit',
+    'apitoolkit_django.APIToolkit',
     ...,
 ]
 
@@ -50,7 +50,7 @@ Also note that these list of items to be redacted will be aplied to all endpoint
 To learn more about jsonpath to help form your queries, please take a look at this cheatsheet:
 [https://lzone.de/cheat-sheet/JSONPath](https://lzone.de/cheat-sheet/JSONPath)
 
-## Degugging
+## Debugging
 
 You can add `APITOOLKIT_DEBUG` to your app settings file and set it to `True` to enable debug logging from the SDK. This will print out logs for each request/response captured by the middleware. APITOOLKIT_DEBUG defaults to `False`.
 
