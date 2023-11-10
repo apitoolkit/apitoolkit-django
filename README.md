@@ -42,17 +42,6 @@ APITOOLKIT_REDACT_REQ_BODY = ["$.password", "$.credit_card"]
 APITOOLKIT_REDACT_RES_BODY = ["$.credentials", "$.social_security_number"]
 ```
 
-## Tags and Service versions
-
-You can also add tags and service versions in your requests monitoring by adding them in your `settings.py` file
-
-#### Example
-
-```python
-APITOOLKIT_TAGS = ["PROD", "EU"]
-APITTOLKIT_SERVICE_VERSION = "2.0.0"
-```
-
 It is important to note that while the `APITOOLKIT_REDACT_HEADERS` config field accepts a list of headers(case insensitive),
 the `APITOOLKIT_REDACT_REQ_BODY` and `APITOOLKIT_REDACT_RES_BODY` expect a list of JSONPath strings as arguments.
 
@@ -71,6 +60,17 @@ Eg:
 
 APITOOLKIT_DEBUG = True
 
+```
+
+## Tags and Service versions
+
+You can also add tags and service versions in your requests monitoring by adding them in your `settings.py` file
+
+#### Example
+
+```python
+APITOOLKIT_TAGS = ["PROD", "EU"]
+APITTOLKIT_SERVICE_VERSION = "2.0.0"
 ```
 
 # Outgoing Requests
