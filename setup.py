@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="apitoolkit-django",
-    version="0.2.2",
+    version="0.2.3",
     packages=find_packages(),
     description='A Django SDK for Apitoolkit integration',
     long_description=long_description,
@@ -15,7 +15,7 @@ setup(
     install_requires=[
         'Django',
         'requests',
-        'google-cloud',
+        'google-cloud-pubsub',
         'google-auth',
         'jsonpath-ng',
         'apitoolkit-python'
