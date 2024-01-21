@@ -15,7 +15,7 @@ setup(
     install_requires=[
         'Django',
         'requests',
-        'google-cloud-pubsub',
+        'google-cloud',
         'google-auth',
         'jsonpath-ng',
         'apitoolkit-python'
