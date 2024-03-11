@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "apitoolkit-django"
-version = "0.2.1"
+version = "0.3.0"
 description = "APIToolkit SDK for Django"
 authors = [{ name = "Anthony ALaribe", email = "anthonyalaribe@gmail.com" }]
 license = { file = "LICENSE" }
