@@ -80,6 +80,9 @@ class APIToolkit:
             if isinstance(body, str):
                 return body.encode('utf-8')
             return body
+    def process_exception(self, request, exception):
+        report_error(request,exception)
+        pass
 
     def __call__(self, request):
         if self.debug:
@@ -101,13 +104,12 @@ class APIToolkit:
         request.apitoolkit_message_id = str(uuid.uuid4())
         request.apitoolkit_errors = []
         request.apitoolkit_client = self
-
         response = self.get_response(request)
         if self.debug:
             print("APIToolkit: after request")
         end_time = time.perf_counter_ns()
-        url_path = request.resolver_match.route
-        path_params = request.resolver_match.kwargs
+        url_path = request.resolver_match.route if request.resolver_match is not None else None
+        path_params = request.resolver_match.kwargs if request.resolver_match is not None else {}      
         duration = (end_time - start_time)
         status_code = response.status_code
         request_body = json.dumps(request_body)
