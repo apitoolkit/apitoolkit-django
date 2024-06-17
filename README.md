@@ -1,116 +1,97 @@
-# API Toolkit Python Django SDK
+<div align="center">
 
-The API Toolkit django client is an sdk used to integrate django web applications with APIToolkit.
-It monitors incoming traffic, gathers the requests and sends the request to the apitoolkit servers.
+![APItoolkit's Logo](https://github.com/apitoolkit/.github/blob/main/images/logo-white.svg?raw=true#gh-dark-mode-only)
+![APItoolkit's Logo](https://github.com/apitoolkit/.github/blob/main/images/logo-black.svg?raw=true#gh-light-mode-only)
 
-## How to Integrate:
+## Django SDK
 
-First install the apitoolkit django sdk:
-`pip install apitoolkit-django`
+[![APItoolkit SDK](https://img.shields.io/badge/APItoolkit-SDK-0068ff?logo=django)](https://github.com/topics/apitoolkit-sdk) [![Join Discord Server](https://img.shields.io/badge/Chat-Discord-7289da)](https://discord.gg/dEB6EjQnKB) [![APItoolkit Docs](https://img.shields.io/badge/Read-Docs-0068ff)](https://apitoolkit.io/docs/sdks/python/django?utm_source=github-sdks) 
 
-Add your APIToolkit API key (APITOOLKIT_KEY) to your django settings:
+APItoolkit is an end-to-end API and web services management toolkit for engineers and customer support teams. To integrate your Django application with APItoolkit, you need to use this SDK to monitor incoming traffic, aggregate the requests, and then deliver them to the APItoolkit's servers.
 
-```python
-APITOOLKIT_KEY = "<YOUR_API_KEY>"
+</div>
+
+---
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Contributing and Help](#contributing-and-help)
+- [License](#license)
+
+---
+
+## Installation
+
+Kindly run the command below to install the SDK:
+
+```sh
+pip install apitoolkit-django
 ```
 
-Then add apitoolkit middleware into the settings middleware list:
+## Configuration
+
+First, add the `APITOOLKIT_KEY` environment variable to your `.env` file, like so:
+
+```sh
+APITOOLKIT_KEY={ENTER_YOUR_API_KEY_HERE}
+```
+
+Next, add the `APITOOLKIT_KEY` to your Django settings (`settings.py`) file, like so:
 
 ```python
+from pathlib import Path
+from dotenv import load_dotenv
+import os
 
-MIDDLEWARE = [
-    ...,
-    'apitoolkit_django.APIToolkit',
-    ...,
+load_dotenv()
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+APITOOLKIT_KEY = os.getenv('APITOOLKIT_KEY')
+APITOOLKIT_DEBUG = False
+APITOOLKIT_TAGS= ["environment: production", "region: us-east-1"]
+APITOOLKIT_SERVICE_VERSION= "v2.0"
+
+# Application definition
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.sessions',
 ]
 
+...
 ```
 
-This will monitor all requests and send them to the APIToolkit's servers.
+Then add the `apitoolkit_django.APIToolkit` middleware into the `settings.py` middleware list, like so:
 
-## Client Redacting fields
+> [!NOTE]
+> 
+> The `{ENTER_YOUR_API_KEY_HERE}` demo string should be replaced with the [API key](https://apitoolkit.io/docs/dashboard/settings-pages/api-keys?utm_source=github-sdks) generated from the APItoolkit dashboard.
 
-While it's possible to mark a field as redacted from the apitoolkit dashboard, this client also supports redacting at the client side.
-Client side redacting means that those fields would never leave your servers at all. So you feel safer that your sensitive data only stays on your servers.
+<br />
 
-To mark fields that should be redacted, add them to your application's settings.
-Eg:
+> [!IMPORTANT]
+> 
+> To learn more configuration options (redacting fields, error reporting, outgoing requests, etc.), please read this [SDK documentation](https://apitoolkit.io/docs/sdks/python/django?utm_source=github-sdks).
 
-```python
-APITOOLKIT_REDACT_HEADERS = ["Authorization", "Cookie","Content-Length", "Content-Type"]
-APITOOLKIT_REDACT_REQ_BODY = ["$.password", "$.credit_card"]
-APITOOLKIT_REDACT_RES_BODY = ["$.credentials", "$.social_security_number"]
-```
+## Contributing and Help
 
-It is important to note that while the `APITOOLKIT_REDACT_HEADERS` config field accepts a list of headers(case insensitive),
-the `APITOOLKIT_REDACT_REQ_BODY` and `APITOOLKIT_REDACT_RES_BODY` expect a list of JSONPath strings as arguments.
+To contribute to the development of this SDK or request help from the community and our team, kindly do any of the following:
+- Read our [Contributors Guide](https://github.com/apitoolkit/.github/blob/main/CONTRIBUTING.md).
+- Join our community [Discord Server](https://discord.gg/dEB6EjQnKB).
+- Create a [new issue](https://github.com/apitoolkit/apitoolkit-django/issues/new/choose) in this repository.
 
-The choice of JSONPath was selected to allow you have great flexibility in descibing which fields within your responses are sensitive.
-Also note that these list of items to be redacted will be aplied to all endpoint requests and responses on your server.
-To learn more about jsonpath to help form your queries, please take a look at this cheatsheet:
-[https://lzone.de/cheat-sheet/JSONPath](https://lzone.de/cheat-sheet/JSONPath)
+## License
 
-## Debugging
+This repository is published under the [MIT](LICENSE) license.
 
-You can add `APITOOLKIT_DEBUG` to your app settings file and set it to `True` to enable debug logging from the SDK. This will print out logs for each request/response captured by the middleware. APITOOLKIT_DEBUG defaults to `False`.
+---
 
-Eg:
+<div align="center">
+    
+<a href="https://apitoolkit.io?utm_source=github-sdks" target="_blank" rel="noopener noreferrer"><img src="https://github.com/apitoolkit/.github/blob/main/images/icon.png?raw=true" width="40" /></a>
 
-```python
-
-APITOOLKIT_DEBUG = True
-
-```
-
-## Tags and Service versions
-
-You can also add tags and service versions in your requests monitoring by adding them in your `settings.py` file
-
-#### Example
-
-```python
-APITOOLKIT_TAGS = ["PROD", "EU"]
-APITTOLKIT_SERVICE_VERSION = "2.0.0"
-```
-
-# Outgoing Requests
-
-To monitor outgoing HTTP requests from your Django application, you can use the `observe_request` function from the `apitoolkit_django` module. This allows you to capture and send copies of all incoming and outgoing requests to an apitoolkit server for monitoring and analysis.
-
-### Example
-
-```python
-from django.http import JsonResponse
-from apitoolkit_django import observe_request, report_error
-
-
-def hello_world(request, name):
-    resp = observe_request(request).get(
-        "https://jsonplaceholder.typicode.com/todos/2")
-    resp.read()
-    return JsonResponse({"data": resp.read()})
-```
-
-The `observe_request` function wraps an httpx client and you can use it just like you would normally use httpx for any request you need.
-
-# Error Reporting
-
-If you’ve used sentry, or bugsnag, or rollbar, then you’re already familiar with this usecase.
-But you can report an error to apitoolkit. A difference, is that errors are always associated with a parent request, and helps you query and associate the errors which occured while serving a given customer request. Unhandled errors are reported automatically but you can also report errors to APIToolkit by using the `report_error` function from the `apitoolkit_django` module to report an error you can report as many errors you want during a request
-
-### Example
-
-```python
-from django.http import JsonResponse
-from apitoolkit_django import observe_request, report_error
-
-def hello_world(request, name):
-    try:
-        resp = observe_request(request).get(
-            "https://jsonplaceholder.typicode.com/todos/2")
-        resp.read()
-        return JsonResponse({"hello": "world"})
-    except Exception as e:
-        report_error(request, e)
-        return JsonResponse({"Error": "Something went wrong"})
-```
+</div>
