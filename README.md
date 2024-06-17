@@ -67,6 +67,16 @@ INSTALLED_APPS = [
 
 Then add the `apitoolkit_django.APIToolkit` middleware into the `settings.py` middleware list, like so:
 
+```python
+MIDDLEWARE = [
+    'apitoolkit_django.APIToolkit', # Initialize APItoolkit
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    ...,
+]
+```
+
 > [!NOTE]
 > 
 > The `{ENTER_YOUR_API_KEY_HERE}` demo string should be replaced with the [API key](https://apitoolkit.io/docs/dashboard/settings-pages/api-keys?utm_source=github-sdks) generated from the APItoolkit dashboard.
