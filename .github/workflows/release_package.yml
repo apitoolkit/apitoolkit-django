@@ -60,7 +60,6 @@ jobs:
           git add CHANGELOG.md
           git add setup.py
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
-          git tag v${{ env.NEW_VERSION }}
 
       # Push changes and tags
       - name: Push changes
