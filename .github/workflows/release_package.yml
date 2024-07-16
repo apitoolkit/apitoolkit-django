@@ -73,12 +73,12 @@ jobs:
       - name: Build package
         run: python setup.py sdist bdist_wheel
 
-      # Publish to PyPI
       - name: Publish to PyPI
         env:
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: twine upload dist/*
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python -m twine upload dist/*
 
       # Read version changelog
       - id: get-changelog
